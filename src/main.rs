@@ -16,6 +16,7 @@ pub fn get_books() -> Vec<Book> {
         String::from("Harry Potter: The chamber of secrets"),
         513,
     ));
+    book_list.push(Book::new(String::from("Vals alarm"), 400));
     book_list
 }
 
