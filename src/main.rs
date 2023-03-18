@@ -11,6 +11,7 @@ pub struct Book {
 pub fn get_books() -> Vec<Book> {
     let mut book_list: Vec<Book> = Vec::new();
     book_list.push(Book::new(String::from("Misery"), 261));
+    book_list.push(Book::new(String::from("Misery"), 261));
     book_list.push(Book::new(String::from("Lord of the flies"), 210));
     book_list.push(Book::new(
         String::from("Harry Potter: The chamber of secrets"),
