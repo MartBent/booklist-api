@@ -8,22 +8,23 @@ pub struct Book {
     pub id: u16,
     pub title: String,
     pub page_amount: u16,
+    pub cover_img_src: String,
 }
 
 impl Book {
-    pub fn new(id: u16, title: String, page_amount: u16) -> Self {
+    pub fn new(id: u16, title: String, page_amount: u16, cover_img_src: String) -> Self {
         Self {
             id,
             title,
             page_amount,
+            cover_img_src,
         }
     }
 }
 
 pub fn get_books() -> Result<Vec<Book>> {
     let json_string = fs::read_to_string("./books.json")?;
-    let mut book_list: Vec<Book> = serde_json::from_str(&json_string)?;
-    book_list.push(Book { id: 2, title: String::from("The lord of the flies"), page_amount: 196 });
+    let book_list: Vec<Book> = serde_json::from_str(&json_string)?;
     Ok(book_list)
 }
 
