@@ -32,8 +32,10 @@ pub fn get_books() -> Result<Vec<Book>> {
 #[post("/books")]
 async fn update_books(body: Json<Book>) -> impl Responder {
     let mut books_cache = get_books().unwrap();
+    books_cache.sort_by(|rhs, lhs| rhs.id.cmp(&lhs.id));
+    let new_id = books_cache.last().unwrap().id + 1;
     books_cache.push(Book::new(
-        body.id,
+        new_id,
         body.title.clone(),
         body.page_amount,
         body.cover_img_src.clone(),
