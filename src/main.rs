@@ -1,9 +1,9 @@
-use actix_web::{get, App, HttpServer, Responder};
+use actix_web::{get, post, web::Json, App, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Result;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Book {
     pub id: u16,
     pub title: String,
@@ -28,6 +28,22 @@ pub fn get_books() -> Result<Vec<Book>> {
     Ok(book_list)
 }
 
+//Make sure Content-Type is set to text/json in request header.
+#[post("/books")]
+async fn update_books(body: Json<Book>) -> impl Responder {
+    let mut books_cache = get_books().unwrap();
+    books_cache.push(Book::new(
+        body.id,
+        body.title.clone(),
+        body.page_amount,
+        body.cover_img_src.clone(),
+    ));
+    match fs::write("./books.json", serde_json::to_string(&books_cache).unwrap()) {
+        Err(_) => String::from("Failed"),
+        Ok(_) => String::from("Ok"),
+    }
+}
+
 #[get("/books")]
 async fn books() -> impl Responder {
     let res_body = match get_books() {
@@ -42,7 +58,7 @@ async fn books() -> impl Responder {
 
 #[actix_rt::main]
 async fn main() -> Result<()> {
-    HttpServer::new(|| App::new().service(books))
+    HttpServer::new(|| App::new().service(books).service(update_books))
         .bind("0.0.0.0:9090")?
         .run()
         .await
