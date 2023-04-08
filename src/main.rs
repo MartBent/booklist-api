@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{delete, get, post, put, web::Json, App, HttpRequest, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use std::{fs, io::Result};
@@ -138,7 +139,9 @@ async fn retrieve(req: HttpRequest) -> impl Responder {
 #[actix_rt::main]
 async fn main() -> Result<()> {
     HttpServer::new(|| {
+        let cors = Cors::permissive();
         App::new()
+            .wrap(cors)
             .service(retrieve)
             .service(create)
             .service(delete)
