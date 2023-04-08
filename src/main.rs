@@ -38,7 +38,7 @@ pub fn get_books() -> Result<Vec<Book>> {
     Ok(book_list)
 }
 
-#[put("/books")]
+#[put("/")]
 async fn edit(req: HttpRequest, body: Json<Book>) -> impl Responder {
     let mut books_cache = get_books().unwrap();
     let index = books_cache
@@ -70,7 +70,7 @@ async fn edit(req: HttpRequest, body: Json<Book>) -> impl Responder {
 }
 
 //Make sure Content-Type is set to text/json in request header.
-#[delete("/books")]
+#[delete("/")]
 async fn delete(req: HttpRequest, body: Json<BookId>) -> impl Responder {
     let mut books_cache = get_books().unwrap();
     let index = books_cache
@@ -96,7 +96,7 @@ async fn delete(req: HttpRequest, body: Json<BookId>) -> impl Responder {
 }
 
 //Make sure Content-Type is set to text/json in request header.
-#[post("/books")]
+#[post("/")]
 async fn create(req: HttpRequest, body: Json<Book>) -> impl Responder {
     let mut books_cache = get_books().unwrap();
     books_cache.sort_by(|rhs, lhs| rhs.id.cmp(&lhs.id));
@@ -119,7 +119,7 @@ async fn create(req: HttpRequest, body: Json<Book>) -> impl Responder {
     result
 }
 
-#[get("/books")]
+#[get("/")]
 async fn retrieve(req: HttpRequest) -> impl Responder {
     let result = match get_books() {
         Ok(book_list) => match serde_json::to_string(&book_list) {
