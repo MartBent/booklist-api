@@ -100,7 +100,12 @@ async fn delete(req: HttpRequest, body: Json<BookId>) -> impl Responder {
 async fn create(req: HttpRequest, body: Json<Book>) -> impl Responder {
     let mut books_cache = get_books().unwrap();
     books_cache.sort_by(|rhs, lhs| rhs.id.cmp(&lhs.id));
-    let new_id = books_cache.last().unwrap().id + 1;
+
+    let new_id = match books_cache.last() {
+        Some(book) => book.id + 1,
+        None => 0,
+    };
+
     books_cache.push(Book::new(
         new_id,
         body.title.clone(),
