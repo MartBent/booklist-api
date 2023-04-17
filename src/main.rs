@@ -8,6 +8,7 @@ pub struct Book {
     pub id: u16,
     pub title: String,
     pub page_amount: u16,
+    pub pages_read: u16,
     pub cover_img_src: String,
 }
 
@@ -17,11 +18,18 @@ pub struct BookId {
 }
 
 impl Book {
-    pub fn new(id: u16, title: String, page_amount: u16, cover_img_src: String) -> Self {
+    pub fn new(
+        id: u16,
+        title: String,
+        page_amount: u16,
+        pages_read: u16,
+        cover_img_src: String,
+    ) -> Self {
         Self {
             id,
             title,
             page_amount,
+            pages_read,
             cover_img_src,
         }
     }
@@ -52,6 +60,7 @@ async fn edit(req: HttpRequest, body: Json<Book>) -> impl Responder {
                 body.id,
                 body.title.clone(),
                 body.page_amount,
+                body.pages_read,
                 body.cover_img_src.clone(),
             ));
             match save_books(books_cache) {
@@ -110,6 +119,7 @@ async fn create(req: HttpRequest, body: Json<Book>) -> impl Responder {
         new_id,
         body.title.clone(),
         body.page_amount,
+        body.pages_read,
         body.cover_img_src.clone(),
     ));
     let result = match save_books(books_cache) {
